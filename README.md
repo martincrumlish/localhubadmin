@@ -85,25 +85,15 @@ You'll need two types of API keys:
    - `https://*.vercel.app/*` (for production)
    - Your production domain
 5. Copy this key for `GOOGLE_MAPS_PUBLIC_KEY`
+5. Copy this key for BOTH `GOOGLE_MAPS_PUBLIC_KEY` and `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (they should have the same value)
 
-### 4. Configure Environment Variables
+#### Understanding the API Key Variables
 
-1. Copy `.env.example` to `.env.local`:
+You'll notice there are two similar-looking variables for the client-side API key:
+- **`GOOGLE_MAPS_PUBLIC_KEY`**: Legacy/compatibility variable
+- **`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`**: Required by Next.js for client-side access
 
-```bash
-cp .env.example .env.local
-```
-
-2. Edit `.env.local` and add your API keys:
-
-```env
-GOOGLE_PLACES_API_KEY=your_server_key_here
-GOOGLE_DIRECTIONS_API_KEY=your_server_key_here
-GOOGLE_MAPS_PUBLIC_KEY=your_browser_key_here
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_browser_key_here
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-DATABASE_URL="file:./dev.db"
-```
+**Both should have the SAME value** (your browser API key). Next.js only exposes environment variables with the `NEXT_PUBLIC_` prefix to the browser, which is why both are needed.
 
 **Important**: Never commit `.env.local` or `.env` to version control. They're already in `.gitignore`.
 
@@ -113,7 +103,12 @@ DATABASE_URL="file:./dev.db"
 
 We provide automated setup scripts that handle all the installation steps for you.
 
+**Before running the setup script:**
+1. Edit `.env.example` and add your Google Maps API keys (see Google Maps Platform Setup above)
+
 #### For Windows:
+
+**Note**: You may need to run as Administrator on some Windows systems.
 
 ```bash
 git clone https://github.com/martincrumlish/localhubadmin.git
@@ -131,15 +126,15 @@ chmod +x setup.sh
 ```
 
 The setup script will:
-1. ✅ Create `.env.local` from `.env.example`
-2. ✅ Install all dependencies
+1. ✅ Create `.env.local` and `.env` from `.env.example`
+2. ✅ Install all dependencies (including ts-node and typescript)
 3. ✅ Generate Prisma Client
 4. ✅ Run database migrations
 5. ✅ Seed the database with initial admin user
 6. ✅ Build the widget bundle
 
 **After running the setup script:**
-1. Edit `.env.local` (and `.env` if needed) and add your Google Maps API keys (see Google Maps Platform Setup above)
+1. Verify `.env.local` and `.env` were created correctly
 2. Run `npm run dev` to start the development server
 3. Visit `http://localhost:3000/admin/login`
 4. Login with: `admin@example.com` / `password123`
@@ -165,13 +160,23 @@ npm install
 
 #### 3. Set Up Environment Variables
 
-Copy the example environment file and add your API keys:
+Edit `.env.example` and add your Google Maps API keys:
+
+```env
+GOOGLE_PLACES_API_KEY=your_server_key_here
+GOOGLE_DIRECTIONS_API_KEY=your_server_key_here
+GOOGLE_MAPS_PUBLIC_KEY=your_browser_key_here
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_browser_key_here
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+DATABASE_URL="file:./dev.db"
+```
+
+Then copy it to create both `.env.local` and `.env`:
 
 ```bash
 cp .env.example .env.local
+cp .env.example .env
 ```
-
-Then edit `.env.local` with your Google Maps API keys (see Google Maps Platform Setup above).
 
 #### 4. Set Up the Database
 
@@ -216,7 +221,6 @@ npm run dev
 ```
 
 The server will start at `http://localhost:3000`
-
 ## Using the Admin Interface
 
 ### Accessing the Admin Panel
