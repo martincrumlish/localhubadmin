@@ -139,7 +139,7 @@ The setup script will:
 6. ✅ Build the widget bundle
 
 **After running the setup script:**
-1. Edit `.env.local` and add your Google Maps API keys (see Google Maps Platform Setup above)
+1. Edit `.env.local` (and `.env` if needed) and add your Google Maps API keys (see Google Maps Platform Setup above)
 2. Run `npm run dev` to start the development server
 3. Visit `http://localhost:3000/admin/login`
 4. Login with: `admin@example.com` / `password123`
@@ -401,6 +401,19 @@ Update the manifest URL in ChatGPT to your production URL:
 - `https://YOUR-PROJECT.vercel.app/api/mcp`
 
 ## Troubleshooting
+
+### Setup Issues
+
+- **Windows: Permission Errors**
+  - Solution: Run `setup.bat` as Administrator (right-click → "Run as administrator")
+
+- **Prisma can't find DATABASE_URL**
+  - Solution: The setup scripts create both `.env` and `.env.local`. Prisma reads from `.env`
+  - If running manually, ensure you copy `.env.example` to both `.env` and `.env.local`
+
+- **Prisma seed fails with module errors**
+  - Solution: Already fixed in package.json with CommonJS compiler options
+  - If you encounter issues, ensure ts-node and typescript are installed: `npm install -D ts-node typescript`
 
 ### API Key Issues
 - **Error**: "This API key is not authorized to use this service or API"
