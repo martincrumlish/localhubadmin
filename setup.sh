@@ -19,6 +19,16 @@ else
   echo ""
 fi
 
+# Create .env file for Prisma (Prisma requires DATABASE_URL in .env, not .env.local)
+if [ ! -f .env ]; then
+  echo "📝 Creating .env file for Prisma..."
+  cp .env.example .env
+  echo ""
+else
+  echo "✅ .env already exists"
+  echo ""
+fi
+
 # Install dependencies
 echo "📦 Installing dependencies..."
 npm install

@@ -1,6 +1,7 @@
 @echo off
 REM LocalHub Setup Script for Windows
 REM This script automates the initial setup process
+REM NOTE: You may need to run this script as Administrator on some Windows systems
 
 echo.
 echo ============================================
@@ -18,6 +19,16 @@ if not exist .env.local (
   echo.
 ) else (
   echo .env.local already exists
+  echo.
+)
+
+REM Create .env file for Prisma (Prisma requires DATABASE_URL in .env, not .env.local)
+if not exist .env (
+  echo Creating .env file for Prisma...
+  copy .env.example .env
+  echo.
+) else (
+  echo .env already exists
   echo.
 )
 
