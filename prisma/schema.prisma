@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  sessions     Session[]
+  projects     Project[]
+  businesses   Business[]
+
+  @@index([email])
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  adminId   Int
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([adminId])
+}
+
+model Project {
+  id                Int       @id @default(autoincrement())
+  name              String
+  description       String?
+  status            String    @default("active")
+  createdByAdminId  Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  createdBy         Admin     @relation(fields: [createdByAdminId], references: [id])
+  businesses        Business[]
+
+  @@index([status])
+}
+
+model Business {
+  id               Int      @id @default(autoincrement())
+  projectId        Int
+  placeId          String   @unique
+  businessName     String
+  addedByAdminId   Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  addedBy          Admin    @relation(fields: [addedByAdminId], references: [id])
+
+  @@index([placeId])
+  @@index([projectId])
+}
